@@ -24,7 +24,13 @@ def get_password(password_file):
     return ptt_id, password
 
 
-def remove_pool(ptt_id):
+def remove_from_pool(ptt_id):
+    log.show_value(
+        'remove_from_pool',
+        log.level.INFO,
+        'remove',
+        ptt_id
+    )
     global mail_pool
     global line_pool
     global waterball_pool
@@ -37,7 +43,36 @@ def remove_pool(ptt_id):
         waterball_pool.remove(ptt_id)
 
 
+def pairing(ptt_bot, pool, msg_type):
+
+    log.show_value(
+        'pairing',
+        log.level.INFO,
+        '配對',
+        msg_type
+    )
+
+    random.shuffle(pool)
+    while len(pool) >= 2:
+        target_0 = pool[0]
+        target_1 = pool[1]
+        remove_from_pool(target_0)
+        remove_from_pool(target_1)
+
+        ptt_bot.mail(
+            target_0,
+            'Ptt Talk 配對結果',
+            f'成功配對 {target_1} 請交換{msg_type}',
+            0)
+
+        ptt_bot.mail(
+            target_1,
+            'Ptt Talk 配對結果',
+            f'成功配對 {target_0} 請交換{msg_type}',
+            0)
+
 if __name__ == '__main__':
+
     log.show_value(
         'main',
         log.level.INFO,
@@ -146,31 +181,21 @@ if __name__ == '__main__':
                 ptt_bot.mail(
                     author,
                     'Ptt Talk 註冊結果',
-                    f'已經成功註冊 {response}',
+                    f'已經成功註冊 {response} 通信方式',
                     0
                 )
 
             if len(line_pool) >= max_pool_count:
-                random.shuffle(line_pool)
-                while len(line_pool) >= 2:
-                    target_0 = line_pool[0]
-                    target_1 = line_pool[1]
-                    line_pool = line_pool[2:]
+                pairing(ptt_bot, line_pool, '賴')
 
-                    ptt_bot.mail(
-                        target_0,
-                        'Ptt Talk 配對結果',
-                        f'成功配對 {target_1}',
-                        0)
+            if len(mail_pool) >= max_pool_count:
+                pairing(ptt_bot, mail_pool, '站內信')
 
-                    ptt_bot.mail(
-                        target_1,
-                        'Ptt Talk 配對結果',
-                        f'成功配對 {target_0}',
-                        0)
+            if len(waterball_pool) >= max_pool_count:
+                pairing(ptt_bot, waterball_pool, '水球')
 
             print('完成，休息')
-            time.sleep(3)
+            time.sleep(5)
 
     except Exception as e:
         traceback.print_tb(e.__traceback__)
