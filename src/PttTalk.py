@@ -3,6 +3,7 @@ import sys
 import time
 import traceback
 import random
+import json
 
 import log
 from PyPtt import PTT
@@ -43,6 +44,31 @@ def remove_from_pool(ptt_id):
         waterball_pool.remove(ptt_id)
 
 
+def list_to_file():
+    global mail_pool
+    global line_pool
+    global waterball_pool
+
+    with open('mail_pool.json', 'w', encoding='utf-8') as f:
+        json.dump(mail_pool, f, ensure_ascii=False, indent=4)
+    with open('line_pool.json', 'w', encoding='utf-8') as f:
+        json.dump(line_pool, f, ensure_ascii=False, indent=4)
+    with open('waterball_pool.json', 'w', encoding='utf-8') as f:
+        json.dump(waterball_pool, f, ensure_ascii=False, indent=4)
+
+
+def file_to_list():
+    global mail_pool
+    global line_pool
+    global waterball_pool
+    with open('mail_pool.json', 'r') as f:
+        mail_pool = json.load(f)
+    with open('line_pool.json', 'r') as f:
+        line_pool = json.load(f)
+    with open('waterball_pool.json', 'r') as f:
+        waterball_pool = json.load(f)
+
+
 def pairing(ptt_bot, pool, msg_type):
 
     log.show_value(
@@ -62,13 +88,13 @@ def pairing(ptt_bot, pool, msg_type):
         ptt_bot.mail(
             target_0,
             'Ptt Talk 配對結果',
-            f'成功配對 {target_1} 請交換{msg_type}',
+            f'成功配對 {target_1} 請交換 {msg_type}',
             0)
 
         ptt_bot.mail(
             target_1,
             'Ptt Talk 配對結果',
-            f'成功配對 {target_0} 請交換{msg_type}',
+            f'成功配對 {target_0} 請交換 {msg_type}',
             0)
 
 if __name__ == '__main__':
@@ -118,12 +144,12 @@ if __name__ == '__main__':
             newest_index = ptt_bot.get_newest_index(PTT.data_type.index_type.MAIL)
             ptt_bot.log(f'最新信箱編號 {newest_index}')
 
-            for index in range(1, newest_index + 1):
+            for _ in range(newest_index):
                 log.show(
                     'main',
                     log.level.INFO,
                     '開始讀信')
-                mail_info = ptt_bot.get_mail(newest_index)
+                mail_info = ptt_bot.get_mail(1)
 
                 author = mail_info.author
                 if '(' in author:
@@ -150,9 +176,18 @@ if __name__ == '__main__':
                     'title',
                     title)
 
-                ptt_bot.del_mail(index)
+                ptt_bot.del_mail(1)
 
                 response = ''
+
+                ok_list = [
+                    '站內信',
+                    '賴',
+                    'line',
+                    '水球'
+                ]
+
+                remove_from_pool(author)
 
                 if '站內信' in title:
                     if author not in mail_pool:
