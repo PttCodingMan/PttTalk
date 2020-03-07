@@ -25,12 +25,6 @@ def get_password(password_file):
 
 
 def remove_from_pool(target):
-    log.show_value(
-        'remove_from_pool',
-        log.level.INFO,
-        'remove',
-        target
-    )
     global mail_pool
     global line_pool
     global waterball_pool
@@ -75,18 +69,18 @@ def file_to_list():
 
 
 def pairing(ptt_bot, pool, msg_type):
-    log.show_value(
-        'pairing',
-        log.level.INFO,
-        '配對',
-        msg_type
-    )
     while len(pool) >= 2:
         target_0 = pool[0]
         target_1 = pool[1]
         remove_from_pool(target_0)
         remove_from_pool(target_1)
 
+        log.show_value(
+            'pairing',
+            log.level.INFO,
+            f'{msg_type} 配對成功',
+            f'{target_0} vs {target_1}'
+        )
         ptt_bot.mail(
             target_0,
             'Ptt Talk 配對結果',
@@ -107,11 +101,21 @@ def add_pool(ptt_bot, author, msg):
 
     if '站內信' in msg:
         if author not in mail_pool:
+            log.show_value(
+                'add_pool',
+                log.level.INFO,
+                '加入站內信配對池',
+                author)
             mail_pool.append(author)
             response += '站內信'
 
     if '賴' in msg or 'line' in msg.lower():
         if author not in line_pool:
+            log.show_value(
+                'add_pool',
+                log.level.INFO,
+                '加入賴配對池',
+                author)
             line_pool.append(author)
             if len(response) == 0:
                 response += '賴'
@@ -120,6 +124,11 @@ def add_pool(ptt_bot, author, msg):
 
     if '水球' in msg:
         if author not in waterball_pool:
+            log.show_value(
+                'add_pool',
+                log.level.INFO,
+                '加入水球配對池',
+                author)
             waterball_pool.append(author)
             if len(response) == 0:
                 response += '水球'
@@ -163,6 +172,7 @@ if __name__ == '__main__':
     ptt_id, password = get_password('account.txt')
     try:
         ptt_bot = PTT.API(
+            log_level=PTT.log.level.SILENT,
             # log_level=PTT.log.level.TRACE,
             # log_level=PTT.log.level.DEBUG,
             # host=PTT.data_type.host_type.PTT2
@@ -202,10 +212,6 @@ if __name__ == '__main__':
                 ptt_bot.log(f'最新信箱編號 {newest_index}')
 
             for _ in range(newest_index):
-                log.show(
-                    'main',
-                    log.level.INFO,
-                    '開始讀信')
                 mail_info = ptt_bot.get_mail(1)
 
                 author = mail_info.author
@@ -221,16 +227,16 @@ if __name__ == '__main__':
                 title = mail_info.title
                 title = title.strip()
 
-                log.show_value(
-                    'main',
-                    log.level.INFO,
-                    'author',
-                    author)
-                log.show_value(
-                    'main',
-                    log.level.INFO,
-                    'title',
-                    title)
+                # log.show_value(
+                #     'main',
+                #     log.level.INFO,
+                #     'author',
+                #     author)
+                # log.show_value(
+                #     'main',
+                #     log.level.INFO,
+                #     'title',
+                #     title)
 
                 ptt_bot.del_mail(1)
                 add_pool(ptt_bot, author, title)
@@ -256,11 +262,12 @@ if __name__ == '__main__':
 
             if len(waterball_pool) >= max_pool_count:
                 pairing(ptt_bot, waterball_pool, '水球')
-
-            print('=' * 20)
-            print(f'line: {line_pool}')
-            print(f'mail: {mail_pool}')
-            print(f'水球: {waterball_pool}')
+            #
+            # print('=' * 20)
+            # print(f'line: {line_pool}')
+            # print(f'mail: {mail_pool}')
+            # print(f'水球: {waterball_pool}')
+            log.show('main', log.level.INFO, '執行中', end='\r')
             list_to_file()
             time.sleep(5)
 

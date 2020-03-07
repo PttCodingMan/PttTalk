@@ -36,7 +36,7 @@ def merge(msg) -> str:
     return msg
 
 
-def show(prefix, current_log_level, msg):
+def show(prefix, current_log_level, msg, end='\n'):
     global Log_level
 
     if Log_level > current_log_level:
@@ -63,9 +63,9 @@ def show(prefix, current_log_level, msg):
             'replace'
         ).decode(
             sys.stdin.encoding
-        ))
+        ), end=end)
     except Exception:
-        print(total_message.encode('utf-8', "replace").decode('utf-8'))
+        print(total_message.encode('utf-8', "replace").decode('utf-8'), end=end)
 
     global Handler
     if Handler is not None:
