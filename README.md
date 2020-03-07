@@ -20,3 +20,5 @@
 ![](https://i.imgur.com/QEMXERe.png)
 
 開始聊天吧!!!
+
+如果有問題，可以站內信給 CodingMan 或者 [![chatroom icon](https://patrolavia.github.io/telegram-badge/chat.png)](https://t.me/PttCodingMan)
