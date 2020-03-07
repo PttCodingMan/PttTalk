@@ -137,6 +137,8 @@ if __name__ == '__main__':
 
         max_pool_count = 2
 
+        file_to_list()
+
         while True:
             newest_index = ptt_bot.get_newest_index(PTT.data_type.index_type.MAIL)
 
@@ -232,6 +234,7 @@ if __name__ == '__main__':
             print(f'line: {line_pool}')
             print(f'mail: {mail_pool}')
             print(f'水球: {waterball_pool}')
+            list_to_file()
             time.sleep(5)
 
     except Exception as e:
