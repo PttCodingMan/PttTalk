@@ -2,7 +2,6 @@ import json
 import sys
 import time
 import traceback
-import random
 import json
 
 import log
@@ -77,8 +76,6 @@ def pairing(ptt_bot, pool, msg_type):
         '配對',
         msg_type
     )
-
-    random.shuffle(pool)
     while len(pool) >= 2:
         target_0 = pool[0]
         target_1 = pool[1]
@@ -142,7 +139,9 @@ if __name__ == '__main__':
 
         while True:
             newest_index = ptt_bot.get_newest_index(PTT.data_type.index_type.MAIL)
-            ptt_bot.log(f'最新信箱編號 {newest_index}')
+
+            if newest_index !=0 :
+                ptt_bot.log(f'最新信箱編號 {newest_index}')
 
             for _ in range(newest_index):
                 log.show(
@@ -229,7 +228,10 @@ if __name__ == '__main__':
             if len(waterball_pool) >= max_pool_count:
                 pairing(ptt_bot, waterball_pool, '水球')
 
-            print('完成，休息')
+            print('=' * 20)
+            print(f'line: {line_pool}')
+            print(f'mail: {mail_pool}')
+            print(f'水球: {waterball_pool}')
             time.sleep(5)
 
     except Exception as e:
