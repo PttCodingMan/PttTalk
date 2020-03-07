@@ -198,6 +198,7 @@ if __name__ == '__main__':
             ptt_bot.log('請稍等一下再登入')
             sys.exit()
 
+        ptt_bot.set_call_status(PTT.data_type.call_status.OFF)
         line_pool = []
         waterball_pool = []
         mail_pool = []
