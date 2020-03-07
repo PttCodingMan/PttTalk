@@ -24,23 +24,29 @@ def get_password(password_file):
     return ptt_id, password
 
 
-def remove_from_pool(ptt_id):
+def remove_from_pool(target):
     log.show_value(
         'remove_from_pool',
         log.level.INFO,
         'remove',
-        ptt_id
+        target
     )
     global mail_pool
     global line_pool
     global waterball_pool
 
-    if ptt_id in mail_pool:
-        mail_pool.remove(ptt_id)
-    if ptt_id in line_pool:
-        line_pool.remove(ptt_id)
-    if ptt_id in waterball_pool:
-        waterball_pool.remove(ptt_id)
+    exist = False
+    if target in mail_pool:
+        exist = True
+        mail_pool.remove(target)
+    if target in line_pool:
+        exist = True
+        line_pool.remove(target)
+    if target in waterball_pool:
+        exist = True
+        waterball_pool.remove(target)
+
+    return exist
 
 
 def list_to_file():
@@ -69,7 +75,6 @@ def file_to_list():
 
 
 def pairing(ptt_bot, pool, msg_type):
-
     log.show_value(
         'pairing',
         log.level.INFO,
@@ -93,6 +98,58 @@ def pairing(ptt_bot, pool, msg_type):
             'Ptt Talk 配對結果',
             f'成功配對 {target_0} 請交換 {msg_type}',
             0)
+
+
+def add_pool(ptt_bot, author, msg):
+    exist = remove_from_pool(author)
+
+    response = ''
+
+    if '站內信' in msg:
+        if author not in mail_pool:
+            mail_pool.append(author)
+            response += '站內信'
+
+    if '賴' in msg or 'line' in msg.lower():
+        if author not in line_pool:
+            line_pool.append(author)
+            if len(response) == 0:
+                response += '賴'
+            else:
+                response += ', 賴'
+
+    if '水球' in msg:
+        if author not in waterball_pool:
+            waterball_pool.append(author)
+            if len(response) == 0:
+                response += '水球'
+            else:
+                response += ', 水球'
+
+    if len(response) == 0:
+        if exist:
+            ptt_bot.mail(
+                author,
+                'Ptt Talk 取消配對成功',
+                f'已經成功取消配對，感謝您的使用',
+                0)
+        else:
+            content = '''請詳閱使用說明
+https://github.com/PttCodingMan/PttTalk
+'''
+            content = content.replace('\n', '\r\n')
+            ptt_bot.mail(
+                author,
+                'Ptt Talk 註冊失敗',
+                content,
+                0)
+    else:
+        ptt_bot.mail(
+            author,
+            'Ptt Talk 註冊成功',
+            f'已經成功註冊 {response} 通信方式',
+            0)
+
 
 if __name__ == '__main__':
 
@@ -141,8 +198,7 @@ if __name__ == '__main__':
 
         while True:
             newest_index = ptt_bot.get_newest_index(PTT.data_type.index_type.MAIL)
-
-            if newest_index !=0 :
+            if newest_index != 0:
                 ptt_bot.log(f'最新信箱編號 {newest_index}')
 
             for _ in range(newest_index):
@@ -158,13 +214,12 @@ if __name__ == '__main__':
                 else:
                     author = author.strip()
 
+                if ptt_id in author:
+                    ptt_bot.del_mail(1)
+                    continue
+
                 title = mail_info.title
                 title = title.strip()
-
-                log.show(
-                    'main',
-                    log.level.INFO,
-                    '收到新信!!')
 
                 log.show_value(
                     'main',
@@ -178,48 +233,20 @@ if __name__ == '__main__':
                     title)
 
                 ptt_bot.del_mail(1)
+                add_pool(ptt_bot, author, title)
 
-                response = ''
+            waterball_list = ptt_bot.get_waterball(PTT.data_type.waterball_operate_type.CLEAR)
 
-                ok_list = [
-                    '站內信',
-                    '賴',
-                    'line',
-                    '水球'
-                ]
-
-                remove_from_pool(author)
-
-                if '站內信' in title:
-                    if author not in mail_pool:
-                        mail_pool.append(author)
-                        response += '站內信'
-
-                if '賴' in title or 'line' in title.lower():
-                    if author not in line_pool:
-                        line_pool.append(author)
-                        if len(response) == 0:
-                            response += '賴'
-                        else:
-                            response += ', 賴'
-
-                if '水球' in title:
-                    if author not in waterball_pool:
-                        waterball_pool.append(author)
-                        if len(response) == 0:
-                            response += '水球'
-                        else:
-                            response += ', 水球'
-
-                if len(response) == 0:
+            for waterball in waterball_list:
+                if waterball.type != PTT.data_type.waterball_type.CATCH:
                     continue
 
-                ptt_bot.mail(
-                    author,
-                    'Ptt Talk 註冊結果',
-                    f'已經成功註冊 {response} 通信方式',
-                    0
-                )
+                author = waterball.target
+                if ptt_id in author:
+                    continue
+                content = waterball.content
+
+                add_pool(ptt_bot, author, content)
 
             if len(line_pool) >= max_pool_count:
                 pairing(ptt_bot, line_pool, '賴')
