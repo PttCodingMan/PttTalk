@@ -160,6 +160,45 @@ https://github.com/PttCodingMan/PttTalk
             0)
 
 
+def handler(msg):
+    with open('log.txt', 'a', encoding='utf-8') as F:
+        F.write(msg + '\n')
+
+
+def login():
+    ptt_bot = PTT.API(
+        log_level=PTT.log.level.SILENT,
+        # log_level=PTT.log.level.TRACE,
+        # log_level=PTT.log.level.DEBUG,
+        # host=PTT.data_type.host_type.PTT2
+        # log_handler=handler
+
+        # for 本機測試
+        # connect_mode=PTT.connect_core.connect_mode.TELNET,
+        # host=PTT.data_type.host_type.LOCALhost,
+        # port=8888,
+    )
+    try:
+        ptt_bot.login(
+            ptt_id,
+            password,
+            # kick_other_login=True
+        )
+    except PTT.exceptions.LoginError:
+        ptt_bot.log('登入失敗')
+        sys.exit()
+    except PTT.exceptions.WrongIDorPassword:
+        ptt_bot.log('帳號密碼錯誤')
+        sys.exit()
+    except PTT.exceptions.LoginTooOften:
+        ptt_bot.log('請稍等一下再登入')
+        sys.exit()
+
+    ptt_bot.set_call_status(PTT.data_type.call_status.OFF)
+
+    return ptt_bot
+
+
 if __name__ == '__main__':
 
     log.show_value(
@@ -171,34 +210,9 @@ if __name__ == '__main__':
 
     ptt_id, password = get_password('account.txt')
     try:
-        ptt_bot = PTT.API(
-            log_level=PTT.log.level.SILENT,
-            # log_level=PTT.log.level.TRACE,
-            # log_level=PTT.log.level.DEBUG,
-            # host=PTT.data_type.host_type.PTT2
 
-            # for 本機測試
-            # connect_mode=PTT.connect_core.connect_mode.TELNET,
-            # host=PTT.data_type.host_type.LOCALhost,
-            # port=8888,
-        )
-        try:
-            ptt_bot.login(
-                ptt_id,
-                password,
-                # kick_other_login=True
-            )
-        except PTT.exceptions.LoginError:
-            ptt_bot.log('登入失敗')
-            sys.exit()
-        except PTT.exceptions.WrongIDorPassword:
-            ptt_bot.log('帳號密碼錯誤')
-            sys.exit()
-        except PTT.exceptions.LoginTooOften:
-            ptt_bot.log('請稍等一下再登入')
-            sys.exit()
+        ptt_bot = login()
 
-        ptt_bot.set_call_status(PTT.data_type.call_status.OFF)
         line_pool = []
         waterball_pool = []
         mail_pool = []
