@@ -21,4 +21,9 @@
 
 開始聊天吧!!!
 
+### 常見問題
+
+Q: 為什麼這麼久都沒有配對成功?  
+A: 因為你報名的通訊方式，沒有人報名，根據設計待越久的人會優先配對，請耐心等候
+
 如果有問題，可以站內信給 CodingMan 或者 [![chatroom icon](https://patrolavia.github.io/telegram-badge/chat.png)](https://t.me/PttCodingMan)
