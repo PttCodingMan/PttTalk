@@ -13,7 +13,7 @@
     - 寄信，將通訊方式寫在***標題***，站內信 賴 水球 任選，信件內容無所謂  
 ![](https://i.imgur.com/idUWcSi.png)  
 ![](https://i.imgur.com/GMhFTI5.png)
-    - 水球，將通訊方式輸入即可  
+    - 水球，將你想要的通訊方式輸入即可  
 ![](https://i.imgur.com/nbrsXE0.png)
 2. 寄出後會收到註冊成功信  
 ![](https://i.imgur.com/oIkPsgx.png)
