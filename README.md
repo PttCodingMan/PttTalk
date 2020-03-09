@@ -5,7 +5,7 @@
 
 來用 PttTalk 吧! 安全、隱私且不留任何紀錄
 
-如果有問題，可以站內信給 CodingMan 或者 [![chatroom icon](https://patrolavia.github.io/telegram-badge/chat.png)](https://t.me/PttCodingMan)
+如果有問題，可以站內信給系統維護者 CodingMan 或者透過 [![chatroom icon](https://patrolavia.github.io/telegram-badge/chat.png)](https://t.me/PttCodingMan) 可以找到 CodingMan
 
 ### 使用教學
 
