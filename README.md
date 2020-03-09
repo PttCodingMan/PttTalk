@@ -5,7 +5,9 @@
 
 來用 PttTalk 吧! 安全、隱私且不留任何紀錄
 
-使用教學
+如果有問題，可以站內信給 CodingMan 或者 [![chatroom icon](https://patrolavia.github.io/telegram-badge/chat.png)](https://t.me/PttCodingMan)
+
+### 使用教學
 
 1. 你可以選擇寄信或者丟水球向 DeepLearning 註冊  
     - 寄信，將通訊方式寫在***標題***，站內信 賴 水球 任選，信件內容無所謂  
@@ -24,5 +26,3 @@
 
 Q: 為什麼這麼久都沒有配對成功?  
 A: 因為你報名的通訊方式，沒有人報名，根據設計待越久的人會優先配對，請耐心等候
-
-如果有問題，可以站內信給 CodingMan 或者 [![chatroom icon](https://patrolavia.github.io/telegram-badge/chat.png)](https://t.me/PttCodingMan)
