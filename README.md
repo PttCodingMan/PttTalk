@@ -10,7 +10,7 @@
 
 ### 使用教學
 
-1. 你可以選擇寄信或者丟水球向 DeepLearning 註冊  
+1. 你可以選擇寄信或者丟水球向 __**DeepLearning**__ 註冊  
     - 寄信，將通訊方式寫在***標題***，站內信 賴 水球 任選，信件內容無所謂  
 ![](https://i.imgur.com/idUWcSi.png)  
 ![](https://i.imgur.com/GMhFTI5.png)
